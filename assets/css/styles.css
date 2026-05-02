@@ -1,0 +1,452 @@
+:root {
+  --font-display: "Trebuchet MS", "Segoe UI", sans-serif;
+  --font-body: "Segoe UI", Tahoma, sans-serif;
+  --page-bg: #0d1117;
+  --page-fg: #f4f7fb;
+  --panel-bg: rgba(10, 15, 24, 0.78);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --panel-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  --accent: #78f0a0;
+  --accent-strong: #44c971;
+  --board-frame: rgba(255, 255, 255, 0.12);
+  --board-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+  --button-bg: rgba(255, 255, 255, 0.1);
+  --button-bg-hover: rgba(255, 255, 255, 0.18);
+  --button-fg: #f4f7fb;
+  --board-bg: #203325;
+  --board-grid: rgba(255, 255, 255, 0.08);
+  --snake-head: #d9ff88;
+  --snake-body: #69df8c;
+  --apple: #ff6666;
+  --overlay-bg: rgba(5, 9, 15, 0.72);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--page-fg);
+  background:
+    radial-gradient(circle at top, rgba(120, 240, 160, 0.18), transparent 32%),
+    linear-gradient(160deg, rgba(6, 12, 19, 0.95), rgba(9, 18, 27, 0.88)),
+    var(--page-bg);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("../img/snake-bg.svg");
+  background-position: center;
+  background-size: cover;
+  mix-blend-mode: screen;
+}
+
+body[data-background="grid"]::before {
+  opacity: 0.3;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+body[data-background="stars"]::before {
+  opacity: 0.5;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.9) 1px, transparent 2px),
+    radial-gradient(circle at 80% 28%, rgba(255, 255, 255, 0.85) 1px, transparent 2px),
+    radial-gradient(circle at 60% 75%, rgba(255, 255, 255, 0.8) 1px, transparent 2px),
+    radial-gradient(circle at 35% 65%, rgba(255, 255, 255, 0.7) 1px, transparent 2px),
+    radial-gradient(circle at 70% 50%, rgba(120, 240, 160, 0.65) 2px, transparent 4px);
+  background-size: 280px 280px, 360px 360px, 420px 420px, 300px 300px, 600px 600px;
+}
+
+body[data-background="plain"]::before {
+  opacity: 0;
+}
+
+body[data-theme="classic"] {
+  --page-bg: #091018;
+  --page-fg: #eff9f1;
+  --panel-bg: rgba(7, 16, 23, 0.82);
+  --accent: #78f0a0;
+  --accent-strong: #44c971;
+  --board-bg: #233829;
+  --board-grid: rgba(255, 255, 255, 0.08);
+  --snake-head: #e4ff7a;
+  --snake-body: #63df88;
+  --apple: #ff6d62;
+}
+
+body[data-theme="dark"] {
+  --page-bg: #020202;
+  --page-fg: #f5f5f5;
+  --panel-bg: rgba(12, 12, 12, 0.88);
+  --accent: #ffffff;
+  --accent-strong: #cfcfcf;
+  --button-bg: rgba(255, 255, 255, 0.08);
+  --button-bg-hover: rgba(255, 255, 255, 0.16);
+  --board-bg: #000000;
+  --board-grid: rgba(255, 255, 255, 0.12);
+  --snake-head: #ffffff;
+  --snake-body: #bdbdbd;
+  --apple: #ffffff;
+}
+
+body[data-theme="light"] {
+  --page-bg: #eef4fa;
+  --page-fg: #101214;
+  --panel-bg: rgba(255, 255, 255, 0.84);
+  --panel-border: rgba(16, 18, 20, 0.1);
+  --panel-shadow: 0 18px 45px rgba(30, 50, 80, 0.16);
+  --accent: #1e5eff;
+  --accent-strong: #174bd0;
+  --button-bg: rgba(16, 18, 20, 0.06);
+  --button-bg-hover: rgba(16, 18, 20, 0.12);
+  --button-fg: #101214;
+  --board-frame: rgba(16, 18, 20, 0.1);
+  --board-shadow: 0 22px 60px rgba(0, 0, 0, 0.15);
+  --board-bg: #ffffff;
+  --board-grid: rgba(0, 0, 0, 0.08);
+  --snake-head: #101214;
+  --snake-body: #404b57;
+  --apple: #1e5eff;
+  --overlay-bg: rgba(255, 255, 255, 0.78);
+}
+
+body[data-theme="neon"] {
+  --page-bg: #090312;
+  --page-fg: #f6ebff;
+  --panel-bg: rgba(25, 11, 39, 0.78);
+  --accent: #58fff4;
+  --accent-strong: #2ad8cc;
+  --board-bg: #14091f;
+  --board-grid: rgba(88, 255, 244, 0.12);
+  --snake-head: #ffef62;
+  --snake-body: #58fff4;
+  --apple: #ff53a5;
+}
+
+.page-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1440px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 24px 0 32px;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+}
+
+.control-panel,
+.game-panel {
+  min-width: 0;
+}
+
+.control-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.panel-card,
+.game-stage {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(18px);
+}
+
+.panel-card {
+  padding: 18px;
+}
+
+.hero-card {
+  padding: 22px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+h1,
+h2,
+.l3ryBd {
+  font-family: var(--font-display);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 1rem;
+}
+
+.panel-copy,
+.help-card p {
+  margin: 10px 0 0;
+  line-height: 1.55;
+  opacity: 0.9;
+}
+
+.hero-actions,
+.option-actions,
+.button-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.hero-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+#fullscreenButton {
+  grid-column: 1 / -1;
+}
+
+.button-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+button,
+select {
+  border: 1px solid transparent;
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover,
+select:hover {
+  transform: translateY(-1px);
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #08110c;
+  font-weight: 800;
+}
+
+.secondary-button,
+.theme-button,
+.background-button,
+.touch-button,
+select {
+  background: var(--button-bg);
+  color: var(--button-fg);
+  border-color: var(--panel-border);
+}
+
+.secondary-button:hover,
+.theme-button:hover,
+.background-button:hover,
+.touch-button:hover,
+select:hover {
+  background: var(--button-bg-hover);
+}
+
+.theme-button.active,
+.background-button.active {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.stats-card {
+  display: grid;
+  gap: 12px;
+}
+
+.stat-row,
+.option-row,
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stat-row strong,
+.chip strong {
+  color: var(--accent);
+}
+
+.option-row,
+.toggle-row {
+  margin-bottom: 12px;
+}
+
+input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--accent-strong);
+}
+
+.game-stage {
+  min-height: calc(100vh - 56px);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stage-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--button-bg);
+  border: 1px solid var(--panel-border);
+}
+
+.canvas-shell {
+  position: relative;
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)),
+    rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--board-frame);
+  overflow: hidden;
+}
+
+canvas {
+  width: min(100%, 78vh);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  display: block;
+  border-radius: 24px;
+  background: var(--board-bg);
+  box-shadow: var(--board-shadow);
+}
+
+.overlay-message {
+  position: absolute;
+  inset: auto 32px 32px 32px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: var(--overlay-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+.overlay-message.hidden {
+  display: none;
+}
+
+.overlay-message h2 {
+  margin-bottom: 8px;
+}
+
+.overlay-message p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+.touch-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 90px));
+  justify-content: center;
+  gap: 10px;
+}
+
+.touch-button {
+  min-height: 62px;
+  font-weight: 700;
+}
+
+.touch-button.spacer {
+  visibility: hidden;
+}
+
+body[data-theme="light"] .primary-button {
+  color: #ffffff;
+}
+
+@media (max-width: 1100px) {
+  .page-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .game-stage {
+    min-height: unset;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    width: min(100% - 20px, 1440px);
+    padding-top: 12px;
+  }
+
+  .panel-card,
+  .game-stage {
+    border-radius: 20px;
+  }
+
+  .hero-actions,
+  .button-grid,
+  .option-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .touch-controls {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .canvas-shell {
+    padding: 12px;
+  }
+
+  .overlay-message {
+    inset: auto 14px 14px 14px;
+  }
+}
