@@ -1,2 +1,134 @@
-﻿const body=document.body;const gameWindow=document.getElementById("gameWindow");const gameFrame=document.getElementById("gameFrame");const frameStatus=document.getElementById("frameStatus");const fullscreenButton=document.getElementById("fullscreenButton");const growButton=document.getElementById("growButton");const shrinkButton=document.getElementById("shrinkButton");const resetSizeButton=document.getElementById("resetSizeButton");const reloadButton=document.getElementById("reloadButton");const lightThemeButton=document.getElementById("lightThemeButton");const darkThemeButton=document.getElementById("darkThemeButton");const hideGameButton=document.getElementById("hideGameButton");const quickHideRailButton=document.getElementById("quickHideRailButton");const miniButton=document.getElementById("miniButton");const maxiButton=document.getElementById("maxiButton");const sceneHeading=document.getElementById("sceneHeading");const sceneDescription=document.getElementById("sceneDescription");const sceneButtons=[...document.querySelectorAll("[data-scene-button]")];const sizeOrder=["size-compact","size-normal","size-large","size-xl"];let sizeIndex=1;const sceneCopy={classroom:{heading:"Google Classroom Style",description:"The real local Google Snake game is centered like a study tab, with fast hide and resize controls."},school:{heading:"Desk Study Style",description:"The game sits over a fake school desk scene so it is easier to cover quickly when you need it to disappear."}};function setStatus(message,hideAfter=true){frameStatus.textContent=message;frameStatus.classList.remove("is-hidden");if(hideAfter){window.clearTimeout(setStatus.timer);setStatus.timer=window.setTimeout(()=>frameStatus.classList.add("is-hidden"),900)}}function applySize(){gameWindow.classList.remove(...sizeOrder);gameWindow.classList.add(sizeOrder[sizeIndex])}function growGame(){sizeIndex=Math.min(sizeOrder.length-1,sizeIndex+1);applySize();setStatus("Game window enlarged.")}function shrinkGame(){sizeIndex=Math.max(0,sizeIndex-1);applySize();setStatus("Game window reduced.")}function resetSize(){sizeIndex=1;applySize();setStatus("Game window reset.")}function setTheme(theme){body.dataset.theme=theme;lightThemeButton.classList.toggle("is-active",theme==="light");darkThemeButton.classList.toggle("is-active",theme==="dark")}function setScene(scene){body.dataset.scene=scene;sceneButtons.forEach(button=>button.classList.toggle("is-active",button.dataset.sceneButton===scene));sceneHeading.textContent=sceneCopy[scene].heading;sceneDescription.textContent=sceneCopy[scene].description}function toggleHide(forceState){const nextState=typeof forceState==="string"?forceState:(body.dataset.hidden==="on"?"off":"on");body.dataset.hidden=nextState;const hidden=nextState==="on";hideGameButton.textContent=hidden?"Show Game":"Hide Game";quickHideRailButton.textContent=hidden?"Show":"Hide";setStatus(hidden?"Game hidden behind school work.":"Game visible again.")}function reloadGame(){setStatus("Reloading local Google Snake...",false);gameFrame.src=`./google-snake-local.html?ts=${Date.now()}`}function toggleFullscreen(){if(!document.fullscreenElement){gameWindow.requestFullscreen().catch(()=>{})}else{document.exitFullscreen().catch(()=>{})}}function updateFullscreenLabel(){fullscreenButton.textContent=document.fullscreenElement?"Exit Fullscreen":"Fullscreen"}fullscreenButton.addEventListener("click",toggleFullscreen);growButton.addEventListener("click",growGame);shrinkButton.addEventListener("click",shrinkGame);resetSizeButton.addEventListener("click",resetSize);reloadButton.addEventListener("click",reloadGame);lightThemeButton.addEventListener("click",()=>setTheme("light"));darkThemeButton.addEventListener("click",()=>setTheme("dark"));hideGameButton.addEventListener("click",()=>toggleHide());quickHideRailButton.addEventListener("click",()=>toggleHide());miniButton.addEventListener("click",shrinkGame);maxiButton.addEventListener("click",growGame);sceneButtons.forEach(button=>button.addEventListener("click",()=>setScene(button.dataset.sceneButton)));document.addEventListener("keydown",event=>{if(event.key.toLowerCase()==="h"&&!event.repeat)toggleHide()});document.addEventListener("fullscreenchange",updateFullscreenLabel);gameFrame.addEventListener("load",()=>setStatus(location.protocol==="file:"?"Use start-google-snake.bat for the best local mode.":"Local Google Snake loaded."));applySize();setTheme("light");setScene("classroom");updateFullscreenLabel();
+﻿const body = document.body;
+const gameWindow = document.getElementById("gameWindow");
+const gameFrame = document.getElementById("gameFrame");
+const frameStatus = document.getElementById("frameStatus");
+const fullscreenButton = document.getElementById("fullscreenButton");
+const growButton = document.getElementById("growButton");
+const shrinkButton = document.getElementById("shrinkButton");
+const resetSizeButton = document.getElementById("resetSizeButton");
+const reloadButton = document.getElementById("reloadButton");
+const hideGameButton = document.getElementById("hideGameButton");
+const miniButton = document.getElementById("miniButton");
+const maxiButton = document.getElementById("maxiButton");
+const launchNote = document.getElementById("launchNote");
+const themeButtons = [...document.querySelectorAll("[data-theme-button]")];
+const sizeOrder = ["size-compact", "size-normal", "size-large", "size-xl"];
+const savedTheme = localStorage.getItem("google-snake-theme");
+const savedSize = localStorage.getItem("google-snake-size");
+const savedHidden = localStorage.getItem("google-snake-hidden");
+const supportedRuntime = location.protocol.startsWith("http") && ["127.0.0.1", "localhost"].includes(location.hostname);
+let sizeIndex = Math.max(0, Math.min(sizeOrder.length - 1, Number(savedSize ?? 1)));
 
+function setStatus(message, hideAfter = true) {
+  frameStatus.textContent = message;
+  frameStatus.classList.remove("is-hidden");
+  if (hideAfter) {
+    clearTimeout(setStatus.timer);
+    setStatus.timer = setTimeout(() => {
+      frameStatus.classList.add("is-hidden");
+    }, 900);
+  }
+}
+
+function applySize() {
+  gameWindow.classList.remove(...sizeOrder);
+  gameWindow.classList.add(sizeOrder[sizeIndex]);
+  localStorage.setItem("google-snake-size", String(sizeIndex));
+}
+
+function setTheme(theme) {
+  body.dataset.theme = theme;
+  localStorage.setItem("google-snake-theme", theme);
+  themeButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.themeButton === theme);
+  });
+}
+
+function growGame() {
+  sizeIndex = Math.min(sizeOrder.length - 1, sizeIndex + 1);
+  applySize();
+  setStatus("Game window enlarged.");
+}
+
+function shrinkGame() {
+  sizeIndex = Math.max(0, sizeIndex - 1);
+  applySize();
+  setStatus("Game window reduced.");
+}
+
+function resetSize() {
+  sizeIndex = 1;
+  applySize();
+  setStatus("Game window reset.");
+}
+
+function toggleHide() {
+  const hidden = body.dataset.hidden === "on" ? "off" : "on";
+  body.dataset.hidden = hidden;
+  localStorage.setItem("google-snake-hidden", hidden);
+  hideGameButton.textContent = hidden === "on" ? "Show Game" : "Hide Game";
+  setStatus(hidden === "on" ? "Game hidden." : "Game visible.");
+}
+
+function reloadGame() {
+  setStatus("Reloading local Google Snake...", false);
+  gameFrame.src = `./google-snake-local.html?ts=${Date.now()}`;
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    gameWindow.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+function updateFullscreenLabel() {
+  fullscreenButton.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Fullscreen";
+}
+
+function applyRuntimeMode() {
+  body.dataset.runtime = supportedRuntime ? "supported" : "unsupported";
+
+  if (supportedRuntime) {
+    launchNote.innerHTML = "<strong>Running locally.</strong> This build is using the local server and local game assets only.";
+    return;
+  }
+
+  gameFrame.src = "about:blank";
+  hideGameButton.textContent = "Hide Game";
+  body.dataset.hidden = "on";
+  localStorage.setItem("google-snake-hidden", "on");
+  launchNote.innerHTML = "<strong>Wrong launch method.</strong> Run <code>start-google-snake.bat</code>, then open <code>http://127.0.0.1:8787</code>. Direct file opens and GitHub Pages will break the local game scripts.";
+  setStatus("Start the local server to play.", false);
+}
+
+fullscreenButton.addEventListener("click", toggleFullscreen);
+growButton.addEventListener("click", growGame);
+shrinkButton.addEventListener("click", shrinkGame);
+resetSizeButton.addEventListener("click", resetSize);
+reloadButton.addEventListener("click", reloadGame);
+hideGameButton.addEventListener("click", toggleHide);
+miniButton.addEventListener("click", shrinkGame);
+maxiButton.addEventListener("click", growGame);
+document.addEventListener("fullscreenchange", updateFullscreenLabel);
+document.addEventListener("keydown", (event) => {
+  if (event.key.toLowerCase() === "h" && !event.repeat) {
+    toggleHide();
+  }
+});
+themeButtons.forEach((button) => {
+  button.addEventListener("click", () => setTheme(button.dataset.themeButton));
+});
+gameFrame.addEventListener("load", () => {
+  if (supportedRuntime) {
+    setStatus("Local Google Snake loaded.");
+  }
+});
+
+applySize();
+setTheme(savedTheme || "light");
+body.dataset.hidden = savedHidden === "on" ? "on" : "off";
+hideGameButton.textContent = body.dataset.hidden === "on" ? "Show Game" : "Hide Game";
+applyRuntimeMode();
+updateFullscreenLabel();

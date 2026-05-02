@@ -3,99 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Snake Study Shell</title>
-  <meta name="description" content="Actual local Google Snake inside a school style shell with light mode, dark mode, fullscreen, hide mode, and local backgrounds.">
-  <link rel="icon" href="./www.gstatic.com/images/branding/searchlogo/ico/favicon.ico">
+  <title>Google Snake Local</title>
+  <meta name="description" content="Local Google Snake with a simple shell, theme modes, fullscreen, hide mode, and resize controls.">
+  <link rel="icon" href="/www.gstatic.com/images/branding/searchlogo/ico/favicon.ico">
   <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
-<body data-theme="light" data-scene="classroom" data-hidden="off">
-  <div class="page-shell">
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <span class="dot dot-blue"></span>
-        <span class="dot dot-green"></span>
-        <span class="dot dot-yellow"></span>
-        <span class="dot dot-red"></span>
+<body data-theme="light" data-hidden="off">
+  <main class="app-shell">
+    <header class="app-header">
+      <div class="title-block">
+        <p class="eyebrow">Local Only</p>
+        <h1>Google Snake</h1>
+        <p class="subtitle">Actual local Google Snake with a clean shell, theme switcher, size controls, fullscreen, and a quick hide overlay.</p>
       </div>
-      <button class="rail-button is-active" data-scene-button="classroom" type="button">Classroom</button>
-      <button class="rail-button" data-scene-button="school" type="button">School</button>
-      <div class="rail-spacer"></div>
-      <button id="quickHideRailButton" class="rail-button rail-alert" type="button">Hide</button>
-    </aside>
-    <main class="workspace">
-      <header class="topbar">
-        <div class="brand-block">
-          <img class="brand-mark" src="./www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google">
-          <div>
-            <p class="eyebrow">Study Workspace</p>
-            <h1>Google Snake</h1>
+      <div class="theme-row">
+        <button class="theme-button is-active" data-theme-button="light" type="button">Light</button>
+        <button class="theme-button" data-theme-button="dark" type="button">Dark</button>
+        <button class="theme-button" data-theme-button="hybrid" type="button">Hybrid</button>
+        <button id="hideGameButton" class="theme-button warn" type="button">Hide Game</button>
+      </div>
+    </header>
+
+    <section id="launchNote" class="launch-note">
+      <strong>Use the local launcher.</strong>
+      Run <code>start-google-snake.bat</code>, then open <code>http://127.0.0.1:8787</code>.
+      Opening this file directly or through GitHub Pages will break the game scripts.
+    </section>
+
+    <section class="control-bar">
+      <button id="fullscreenButton" class="control-button" type="button">Fullscreen</button>
+      <button id="growButton" class="control-button" type="button">Bigger</button>
+      <button id="shrinkButton" class="control-button" type="button">Smaller</button>
+      <button id="resetSizeButton" class="control-button" type="button">Reset Size</button>
+      <button id="reloadButton" class="control-button" type="button">Reload</button>
+    </section>
+
+    <section id="gameWindow" class="game-window size-normal">
+      <div class="window-bar">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <div class="window-title">Actual Google Snake</div>
+        <div class="window-actions">
+          <button id="miniButton" class="window-button" type="button" aria-label="Smaller">-</button>
+          <button id="maxiButton" class="window-button" type="button" aria-label="Bigger">+</button>
+        </div>
+      </div>
+      <div class="frame-wrap">
+        <iframe id="gameFrame" class="game-frame" src="./google-snake-local.html" title="Google Snake local" loading="eager" referrerpolicy="no-referrer"></iframe>
+        <div id="frameStatus" class="frame-status">Loading local Google Snake...</div>
+        <div class="study-mask" id="studyMask" aria-hidden="true">
+          <div class="study-sheet">
+            <p class="eyebrow">Classwork</p>
+            <h2>Notes In Progress</h2>
+            <p>1. Review chapter summary.</p>
+            <p>2. Finish practice questions.</p>
+            <p>3. Write final response.</p>
           </div>
         </div>
-        <div class="top-actions">
-          <button id="lightThemeButton" class="action-pill is-active" type="button">Light</button>
-          <button id="darkThemeButton" class="action-pill" type="button">Dark</button>
-          <button id="hideGameButton" class="action-pill action-pill-alert" type="button">Hide Game</button>
-        </div>
-      </header>
-      <section class="hero-strip">
-        <article class="hero-card">
-          <p class="hero-label">Current View</p>
-          <h2 id="sceneHeading">Google Classroom Style</h2>
-          <p id="sceneDescription">The real local Google Snake game is centered like a study tab, with fast hide and resize controls.</p>
-        </article>
-        <article class="hero-card hero-card-tools">
-          <p class="hero-label">Window Tools</p>
-          <div class="tool-grid">
-            <button id="fullscreenButton" class="tool-button" type="button">Fullscreen</button>
-            <button id="growButton" class="tool-button" type="button">Bigger</button>
-            <button id="shrinkButton" class="tool-button" type="button">Smaller</button>
-            <button id="resetSizeButton" class="tool-button" type="button">Reset Size</button>
-            <button id="reloadButton" class="tool-button" type="button">Reload</button>
-          </div>
-        </article>
-      </section>
-      <section class="stage">
-        <div class="scene-image scene-classroom"></div>
-        <div class="scene-image scene-school"></div>
-        <aside class="floating-card floating-left">
-          <p class="floating-title">Assignments</p>
-          <ul>
-            <li>Math worksheet review</li>
-            <li>History notes cleanup</li>
-            <li>Science slides due 2:30 PM</li>
-          </ul>
-        </aside>
-        <aside class="floating-card floating-right">
-          <p class="floating-title">Quick Cover</p>
-          <p>Press <strong>H</strong> to hide the game instantly and swap to a fake school work view.</p>
-        </aside>
-        <section id="gameWindow" class="game-window size-normal">
-          <div class="window-bar">
-            <div class="window-dots"><span></span><span></span><span></span></div>
-            <div class="window-title">Google Snake Local</div>
-            <div class="window-tools">
-              <button id="miniButton" class="window-tool" type="button" aria-label="Smaller">-</button>
-              <button id="maxiButton" class="window-tool" type="button" aria-label="Bigger">+</button>
-            </div>
-          </div>
-          <div class="frame-wrap">
-            <iframe id="gameFrame" class="game-frame" src="./google-snake-local.html" title="Local Google Snake" loading="eager" referrerpolicy="no-referrer"></iframe>
-            <div id="frameStatus" class="frame-status">Loading local Google Snake...</div>
-            <div id="studyMask" class="study-mask" aria-hidden="true">
-              <div class="study-sheet">
-                <div class="study-sheet-top"><span class="study-pill">Classwork</span><span class="study-pill">Due Today</span></div>
-                <h3>Linear Equations Practice</h3>
-                <p>1. Solve for x in each expression.</p>
-                <p>2. Show work and circle final answers.</p>
-                <p>3. Write one sentence explaining your steps.</p>
-                <div class="sheet-lines"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </section>
-    </main>
-  </div>
+      </div>
+    </section>
+  </main>
+
   <script src="./assets/js/app.js"></script>
 </body>
 </html>

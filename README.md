@@ -1,21 +1,33 @@
-# Google Snake Classroom Wrapper
+# Google Snake Local
 
-This project now wraps the actual Google Snake page inside a local Google Classroom style shell.
+This project runs the actual local Google Snake files inside a simple desktop-style shell.
 
-## Open
+## Start
 
-Open `index.html` in a browser.
+Run `start-google-snake.bat`.
 
-## What It Uses
+That starts the local server and opens:
 
-- `live-snake.html` - saved Google Snake entry page
-- Google-hosted live scripts and assets loaded through that saved page
-- Local wrapper styling and controls around the real game
+`http://127.0.0.1:8787`
 
-## Local Controls
+Do not open `index.html` directly from the filesystem.
+Do not use GitHub Pages for this build.
+The game relies on local root-style paths, so direct file opens and subpath hosting will break it.
 
-- Fullscreen the game window
-- Make the game frame bigger
-- Make the game frame smaller
-- Reload the Google Snake frame
-- Switch classroom background scenes
+## Features
+
+- Actual local Google Snake game files
+- Light, dark, and hybrid shell themes
+- Bigger, smaller, reset size, and fullscreen controls
+- Quick hide overlay for school or work
+- Clean local asset routing through `server.js`
+
+## Project Layout
+
+- `index.html` - shell UI
+- `google-snake-local.html` - local Google Snake page
+- `assets/css/styles.css` - shell styling
+- `assets/js/app.js` - shell controls
+- `assets/vendor/` - local patched loader files
+- `vendor/google/` - local Google assets and game resources
+- `server.js` - local static server and path routing
