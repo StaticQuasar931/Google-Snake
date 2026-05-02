@@ -1,23 +1,21 @@
-# Google Snake Local
+# Google Snake Classroom Wrapper
 
-Standalone browser version of Snake with a clean local structure.
+This project now wraps the actual Google Snake page inside a local Google Classroom style shell.
 
 ## Open
 
 Open `index.html` in a browser.
 
-## Features
+## What It Uses
 
-- Fullscreen mode
-- Black screen, white screen, classic, and neon themes
-- Multiple background styles
-- Touch controls for mobile
-- Speed, wall, and grid options
-- Local best-score saving
+- `live-snake.html` - saved Google Snake entry page
+- Google-hosted live scripts and assets loaded through that saved page
+- Local wrapper styling and controls around the real game
 
-## Project Structure
+## Local Controls
 
-- `index.html` - main launcher page
-- `assets/css/styles.css` - styling
-- `assets/js/app.js` - game logic
-- `assets/img/` - local visual assets
+- Fullscreen the game window
+- Make the game frame bigger
+- Make the game frame smaller
+- Reload the Google Snake frame
+- Switch classroom background scenes

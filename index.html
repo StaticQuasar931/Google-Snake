@@ -3,116 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Snake Local</title>
-  <meta name="description" content="Standalone offline Snake game with fullscreen, theme modes, and background options.">
+  <title>Google Snake Classroom</title>
+  <meta name="description" content="Actual Google Snake presented inside a Google Classroom style shell with fullscreen and theme backgrounds.">
   <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
-<body data-theme="classic" data-background="arcade">
-  <div class="page-shell">
-    <aside class="control-panel">
-      <div class="panel-card hero-card">
-        <p class="eyebrow">Offline Browser Edition</p>
-        <h1>Google Snake</h1>
-        <p class="panel-copy">
-          Local, clean, fullscreen-friendly, and much easier to open in any browser.
-        </p>
-        <div class="hero-actions">
-          <button id="startButton" class="primary-button">Start Game</button>
-          <button id="pauseButton" class="secondary-button">Pause</button>
-          <button id="fullscreenButton" class="secondary-button">Fullscreen</button>
-        </div>
-      </div>
-
-      <div class="panel-card stats-card">
-        <div class="stat-row">
-          <span>Score</span>
-          <strong id="scoreValue">0</strong>
-        </div>
-        <div class="stat-row">
-          <span>Best</span>
-          <strong id="bestValue">0</strong>
-        </div>
-        <div class="stat-row">
-          <span>Status</span>
-          <strong id="statusValue">Ready</strong>
-        </div>
-      </div>
-
-      <div class="panel-card">
-        <h2>Screen</h2>
-        <div class="button-grid">
-          <button class="theme-button" data-theme-option="classic">Classic</button>
-          <button class="theme-button" data-theme-option="dark">Black Screen</button>
-          <button class="theme-button" data-theme-option="light">White Screen</button>
-          <button class="theme-button" data-theme-option="neon">Neon</button>
-        </div>
-      </div>
-
-      <div class="panel-card">
-        <h2>Background</h2>
-        <div class="button-grid">
-          <button class="background-button" data-background-option="arcade">Arcade Art</button>
-          <button class="background-button" data-background-option="grid">Grid</button>
-          <button class="background-button" data-background-option="stars">Stars</button>
-          <button class="background-button" data-background-option="plain">Plain</button>
-        </div>
-      </div>
-
-      <div class="panel-card">
-        <h2>Options</h2>
-        <div class="option-row">
-          <label for="speedSelect">Speed</label>
-          <select id="speedSelect">
-            <option value="160">Chill</option>
-            <option value="120" selected>Normal</option>
-            <option value="90">Fast</option>
-            <option value="65">Wild</option>
-          </select>
-        </div>
-        <div class="toggle-row">
-          <label for="wallsToggle">Walls end run</label>
-          <input id="wallsToggle" type="checkbox" checked>
-        </div>
-        <div class="toggle-row">
-          <label for="gridToggle">Show board grid</label>
-          <input id="gridToggle" type="checkbox" checked>
-        </div>
-        <div class="option-actions">
-          <button id="restartButton" class="secondary-button">Restart</button>
-          <button id="shuffleButton" class="secondary-button">Shuffle Apple</button>
-        </div>
-      </div>
-
-      <div class="panel-card help-card">
-        <h2>Controls</h2>
-        <p>Use arrow keys or WASD. On phones and tablets, use the touch pad under the board.</p>
-      </div>
+<body data-scene="classroom-day">
+  <div class="classroom-shell">
+    <aside class="classroom-sidebar">
+      <div class="sidebar-logo">Classroom</div>
+      <div class="sidebar-dot active"></div>
+      <div class="sidebar-dot"></div>
+      <div class="sidebar-dot"></div>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-avatar">S</div>
     </aside>
 
-    <main class="game-panel">
-      <section class="game-stage">
-        <div class="stage-topbar">
-          <span class="chip">Best <strong id="topBestValue">0</strong></span>
-          <span class="chip">Speed <strong id="topSpeedValue">Normal</strong></span>
-          <span class="chip">Theme <strong id="topThemeValue">Classic</strong></span>
+    <main class="workspace">
+      <header class="workspace-topbar">
+        <div>
+          <p class="workspace-kicker">Google Classroom Theme</p>
+          <h1>Google Snake</h1>
         </div>
+        <div class="toolbar-actions">
+          <button id="sceneClassroomButton" class="toolbar-button is-active" type="button">Classroom</button>
+          <button id="sceneNightButton" class="toolbar-button" type="button">Night Study</button>
+          <button id="sceneNotesButton" class="toolbar-button" type="button">Notes Desk</button>
+        </div>
+      </header>
 
-        <div class="canvas-shell" id="canvasShell">
-          <canvas id="gameCanvas" width="720" height="720" aria-label="Snake game board"></canvas>
-          <div id="overlayMessage" class="overlay-message">
-            <h2>Press Start</h2>
-            <p>Pick a theme, go fullscreen if you want, and play.</p>
+      <section class="classroom-board">
+        <div class="board-background">
+          <div class="board-card announce-card">
+            <div>
+              <p class="card-label">Course Stream</p>
+              <h2>Arcade Break</h2>
+            </div>
+            <p>Actual Google Snake loaded in the middle panel.</p>
+          </div>
+
+          <div class="board-card side-card">
+            <p class="card-label">Quick Actions</p>
+            <button id="fullscreenButton" class="chip-button" type="button">Fullscreen</button>
+            <button id="maximizeButton" class="chip-button" type="button">Make Bigger</button>
+            <button id="minimizeButton" class="chip-button" type="button">Make Smaller</button>
+            <button id="reloadButton" class="chip-button" type="button">Reload Game</button>
           </div>
         </div>
 
-        <div class="touch-controls" aria-label="Touch controls">
-          <button class="touch-button spacer" aria-hidden="true" tabindex="-1"></button>
-          <button class="touch-button" data-direction="up">Up</button>
-          <button class="touch-button spacer" aria-hidden="true" tabindex="-1"></button>
-          <button class="touch-button" data-direction="left">Left</button>
-          <button class="touch-button" data-direction="down">Down</button>
-          <button class="touch-button" data-direction="right">Right</button>
+        <div id="gameWindow" class="game-window size-normal">
+          <div class="window-header">
+            <div class="window-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="window-title">Google Snake</div>
+            <div class="window-controls">
+              <button id="overlayMinButton" class="window-button" type="button" aria-label="Minimize">-</button>
+              <button id="overlayGrowButton" class="window-button" type="button" aria-label="Grow">+</button>
+            </div>
+          </div>
+          <div class="game-frame-wrap">
+            <iframe
+              id="gameFrame"
+              class="game-frame"
+              src="./live-snake.html"
+              title="Actual Google Snake"
+              loading="eager"
+              referrerpolicy="no-referrer">
+            </iframe>
+            <div id="frameStatus" class="frame-status">Loading actual Google Snake...</div>
+          </div>
         </div>
       </section>
     </main>
